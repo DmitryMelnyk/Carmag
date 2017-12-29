@@ -2,22 +2,28 @@ package com.carpedia.carmagazine.ui.user_list.view;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.carpedia.carmagazine.R;
 import com.carpedia.carmagazine.data.network.Result;
 import com.carpedia.carmagazine.databinding.FragmentUserListBinding;
+import com.carpedia.carmagazine.model.User;
 import com.carpedia.carmagazine.ui.MainActivity;
 import com.carpedia.carmagazine.ui.common.BaseFragment;
+import com.carpedia.carmagazine.ui.details.view.UserDetailsFragment;
 import com.carpedia.carmagazine.ui.user_list.viewmodel.UserListViewModel;
+import com.carpedia.carmagazine.util.DetailsTransition;
 
 import timber.log.Timber;
 
@@ -44,17 +50,37 @@ public class UserListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Timber.d("onActivityCreated!");
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(UserListViewModel.class);
 
         mBinding.setViewModel(viewModel);
-        mUserAdapter = new UserAdapter(viewModel);
+        mUserAdapter = new UserAdapter(viewModel,
+                (user, image) -> createDetailsFragmentTransition(user, image));
         mBinding.rvUserList.setAdapter(mUserAdapter);
         subscribeUi(viewModel);
 
         setHasOptionsMenu(true);
-        Timber.d("onActivityCreated!");
+    }
+
+    private void createDetailsFragmentTransition(User user, ImageView image) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                UserDetailsFragment fragment = UserDetailsFragment.newInstance(user);
+                fragment.setSharedElementEnterTransition(new DetailsTransition());
+                fragment.setEnterTransition(new Fade());
+                setExitTransition(new Fade());
+                fragment.setSharedElementReturnTransition(new DetailsTransition());
+                getFragmentManager()
+                        .beginTransaction()
+                        .addSharedElement(image, getString(R.string.avatar_transition_name))
+                        .replace(R.id.container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+                ((MainActivity) getActivity()).changeToolbarState(false, user);
+            } else {
+                viewModel.onUserClicked(user);
+            }
     }
 
     @Override
@@ -110,7 +136,7 @@ public class UserListFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_filter) {
+        if (item.getItemId() == R.id.action_sort) {
             new MaterialDialog.Builder(getActivity())
                     .title(R.string.filter_title)
                     .items(R.array.filter_items)

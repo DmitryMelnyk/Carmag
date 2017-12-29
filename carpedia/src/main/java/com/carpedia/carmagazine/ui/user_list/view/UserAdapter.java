@@ -1,11 +1,13 @@
 package com.carpedia.carmagazine.ui.user_list.view;
 
 import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.carpedia.carmagazine.R;
 import com.carpedia.carmagazine.databinding.ItemUserBinding;
@@ -22,11 +24,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Nullable
     private final UserListViewModel mViewModel;
+    private final OnUserClickListener mUserClickListener;
 
     List<? extends User> mUserList;
 
-    public UserAdapter(@Nullable UserListViewModel viewModel) {
+    public UserAdapter(@Nullable UserListViewModel viewModel,
+                       @NonNull OnUserClickListener userClickListener) {
         mViewModel = viewModel;
+        mUserClickListener = userClickListener;
     }
 
     public void setUserList(final List<? extends User> userList) {
@@ -77,8 +82,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
         holder.binding.setUser(mUserList.get(position));
-        holder.binding.executePendingBindings();
         holder.binding.ratingBar.setEnabled(false);
+        holder.binding.getRoot().setOnClickListener(view -> {
+            // setting transition name
+            ImageView image = holder.binding.getRoot().findViewById(R.id.avatar);
+            String transitionName = holder.binding.getRoot().getContext().getString(R.string.avatar_transition_name);
+            image.setTransitionName(transitionName);
+            // notifying viewmodel about user click to perform transition animation
+            mUserClickListener.onUserClicked(mUserList.get(position), image);
+        });
+        holder.binding.executePendingBindings();
     }
 
     @Override
@@ -95,5 +108,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             this.binding = binding;
         }
     }
+
+    public interface OnUserClickListener {
+        void onUserClicked(User user, ImageView sharedElement);
+    }
+
 
 }

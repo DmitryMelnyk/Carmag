@@ -4,4 +4,5 @@
     <string name="choose">choose</string>
     <string name="sanck_network_is_evailable">Network is available</string>
     <string name="snackbar_refresh">Refresh</string>
+    <string name="avatar_transition_name">avatar_transition_name</string>
 </resources>

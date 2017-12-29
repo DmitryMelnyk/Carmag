@@ -5,20 +5,23 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.transition.TransitionInflater;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.carpedia.carmagazine.BR;
 import com.carpedia.carmagazine.R;
 import com.carpedia.carmagazine.databinding.FragmentUserDetailsBinding;
@@ -32,8 +35,6 @@ import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.Pivot;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
-import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import timber.log.Timber;
 
 /**
@@ -47,6 +48,7 @@ public class UserDetailsFragment extends BaseFragment {
 
     FragmentUserDetailsBinding mBinder;
     private UserDetailsViewModel mViewModel;
+    private ImageView imageView;
 
     public static UserDetailsFragment newInstance(User user) {
 
@@ -57,11 +59,18 @@ public class UserDetailsFragment extends BaseFragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        postponeEnterTransition();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinder = DataBindingUtil.inflate(inflater, R.layout.fragment_user_details, container, false);
         Timber.d("created!");
+        imageView = mBinder.getRoot().findViewById(R.id.avatar);
         return mBinder.getRoot();
     }
 
@@ -75,6 +84,35 @@ public class UserDetailsFragment extends BaseFragment {
         mBinder.setUser(mUser);
         mBinder.setViewModel(mViewModel);
         initializeCarScroller();
+
+        Glide.with(this)
+                .load(mUser.getAvatar())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        scheduleStartPostponedTransition(imageView);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        //Image successfully loaded into image view
+                        scheduleStartPostponedTransition(imageView);
+                        return false;
+                    }
+                })
+                .into(imageView);
+    }
+
+    private void scheduleStartPostponedTransition(final ImageView imageView) {
+        imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                startPostponedEnterTransition();
+                return true;
+            }
+        });
     }
 
     private void initializeCarScroller() {

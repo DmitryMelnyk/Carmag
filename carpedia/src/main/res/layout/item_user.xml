@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:onClick="@{() -> viewModel.onUserClicked(user)}"
         >
 
         <RelativeLayout
@@ -29,7 +28,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:loadImage="@{user.avatar}"
+                app:loadCircleImage="@{user.avatar}"
                 />
 
             <LinearLayout

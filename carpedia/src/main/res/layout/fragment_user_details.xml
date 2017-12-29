@@ -13,7 +13,7 @@
             name="viewModel"
             type="com.carpedia.carmagazine.ui.details.viewmodel.UserDetailsViewModel" />
     </data>
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/greyLight"
@@ -35,9 +35,9 @@
                 <ImageView
                     android:id="@+id/avatar"
                     android:layout_centerInParent="true"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    app:loadCircleImage="@{user.avatar}"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:transitionName="@string/avatar_transition_name"
                     tools:src="@mipmap/ic_launcher"
                     />
 
@@ -114,6 +114,13 @@
                 android:layout_height="300dp"
                 android:backgroundTint="@color/greyMiddle"
                 app:dsv_orientation="horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{car.price + `$`}"
+                android:textSize="24sp"
+                />
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </layout>

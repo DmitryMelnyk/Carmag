@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:yourapp="http://schemas.android.com/tools">
     <item
-        android:id="@+id/menu_filter"
+        android:id="@+id/action_sort"
         android:title="Sort"
         android:icon="@drawable/ic_sort"
         app:showAsAction="ifRoom"
