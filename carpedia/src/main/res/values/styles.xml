@@ -1,0 +1,43 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <!--<item name="android:textColorSecondary">@android:color/white</item>-->
+        <!--<item name="actionMenuTextColor">@android:color/white</item>-->
+    </style>
+
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Light">
+        <!-- text color -->
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:layout_width">match_parent</item>
+
+    </style>
+    <style name="LinearLayoutItem">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">@dimen/user_info_item_padding</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_gravity">start</item>
+    </style>
+
+    <style name="ImageViewItem">
+        <item name="android:layout_width">@dimen/user_image_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:tint">@color/colorPrimaryDark</item>
+
+    </style>
+
+    <style name="TextViewItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+</resources>

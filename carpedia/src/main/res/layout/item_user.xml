@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.carpedia.carmagazine.ui.user_list.viewmodel.UserListViewModel"/>
+        <variable
+            name="user"
+            type="com.carpedia.carmagazine.model.User"/>
+    </data>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:onClick="@{() -> viewModel.onUserClicked(user)}"
+        >
+
+        <RelativeLayout
+            android:id="@+id/item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/avatar"
+                tools:src="@mipmap/ic_launcher"
+                android:layout_alignParentLeft="true"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:loadImage="@{user.avatar}"
+                />
+
+            <LinearLayout
+                android:layout_toRightOf="@id/avatar"
+                android:layout_toLeftOf="@id/image_arrow"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/horizontal_margin"
+                android:gravity="left"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/user_list_name"
+                    android:text="@{user.firstName + ' ' + user.lastName}"
+                    tools:text="blank user"
+                    />
+
+                <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                    android:id="@+id/rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:rating="@{user.rating * 2}"
+                    android:numStars="5"
+                    app:mrb_progressTint="@color/colorPrimaryDark"
+                    app:mrb_secondaryProgressTint="@color/colorPrimaryDark"
+                    style="@style/Widget.MaterialRatingBar.RatingBar" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/image_arrow"
+                android:src="@drawable/forward_arrow"
+                android:background="@drawable/forward_arrow_bg"
+                android:layout_marginRight="@dimen/horizontal_margin"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/greyLight"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</layout>

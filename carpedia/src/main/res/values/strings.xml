@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Carpedia</string>
+    <string name="filter_title">Sort by</string>
+    <string name="choose">choose</string>
+    <string name="sanck_network_is_evailable">Network is available</string>
+    <string name="snackbar_refresh">Refresh</string>
+</resources>
